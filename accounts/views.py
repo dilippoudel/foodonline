@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import UserForm
 
+
 def registerUser(request):
     if request.method == 'POST':
         print(request.POST)
