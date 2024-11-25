@@ -5,7 +5,6 @@ from django.contrib import messages
 
 def registerUser(request):
     if request.method == 'POST':
-        print(request.POST)
         form = UserForm(request.POST)
         if form.is_valid():
             """Create the user using the form."""
@@ -27,8 +26,8 @@ def registerUser(request):
             messages.success(request, 'Your account has been registerd successfully!')
             return redirect('registerUser')
         else:
-            print('Invalid Forms')
-            print(form.errors)
+            messages.error(request, form.errors)
+            
     else:
         form = UserForm()
     context = {
