@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
+from vendor.forms import VendorForm
 from .forms import UserForm
 from .models import User
 from django.contrib import messages
-
 def registerUser(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
@@ -34,3 +34,15 @@ def registerUser(request):
         'form': form,
     }
     return render(request, 'accounts/registerUser.html', context)
+
+
+
+def registerVendor(request):
+    form = UserForm()
+    v_form = VendorForm()
+    
+    context = {
+        'form': form,
+        'v_form': v_form,
+    }
+    return render(request, 'accounts/registerVendor.html', context)
