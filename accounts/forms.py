@@ -14,7 +14,7 @@ class UserForm(forms.ModelForm):
             'username',
             'email',
             'password']
-    
+
     def clean(self):
         cleaned_data = super(UserForm, self).clean()
         password = cleaned_data.get('password')
