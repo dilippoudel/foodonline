@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from vendor.forms import VendorForm
 from .forms import UserForm
 from .models import User, UserProfile
-from django.contrib import messages
+from django.contrib import messages, auth
 
 
 def registerUser(request):
@@ -20,8 +20,8 @@ def registerUser(request):
                 first_name=first_name,
                 last_name=last_name,
                 username=username,
-                email=email,
-                password=password)
+                email=email)
+            user.set_password(password)
             user.role = User.CUSTOMER
             user.save()
             messages.success(request,
@@ -48,11 +48,12 @@ def registerVendor(request):
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+            
             user = User.objects.create(first_name=first_name,
                                        last_name=last_name,
                                        username=username,
-                                       email=email,
-                                       password=password)
+                                       email=email)
+            user.set_password(password)
             user.role = User.VENDOR
             user.save()
             vendor = v_form.save(commit=False)
@@ -75,3 +76,28 @@ def registerVendor(request):
         'v_form': v_form,
     }
     return render(request, 'accounts/registerVendor.html', context)
+
+
+def login(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        print(email, password)
+        user = auth.authenticate(email=email, password=password)
+        print(user)
+        if user is not None:
+            auth.login(request, user)
+            messages.success(request, 'You are now logged in.')
+            return redirect('dashboard')
+        else:
+            messages.error(request, 'Invalid log in credentials.')
+            return redirect('login')
+    else:
+        return render(request, 'accounts/login.html')
+
+
+def logout(request):
+    return
+
+def dashboard(request):
+    return render(request, 'accounts/dashboard.html')
